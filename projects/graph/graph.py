@@ -125,7 +125,7 @@ class Graph:
                     q.push((x, n))
         return paths[destination_vertex]
 
-    def dfs_recursive(self, starting_vertex, destination_vertex):
+    def dfs_recursive(self, starting_vertex, destination_vertex, visited=None, previous=None, paths=None):
         """
         Return a list containing a path from
         starting_vertex to destination_vertex in
@@ -133,7 +133,18 @@ class Graph:
 
         This should be done using recursion.
         """
-        pass  # TODO
+        # set up the variables
+        paths = paths if paths else {starting_vertex: [starting_vertex]}
+        visited = visited if visited else set()
+        # check for if we've already been here
+        if starting_vertex not in visited:
+            visited.add(starting_vertex)
+            if previous is not None:
+                paths[starting_vertex] = paths[previous] + [starting_vertex]
+            for x in self.nodes[starting_vertex]:
+                self.dfs_recursive(x, destination_vertex, visited, starting_vertex, paths)
+        if destination_vertex in paths:
+            return paths[destination_vertex]
 
 
 if __name__ == '__main__':
@@ -203,4 +214,4 @@ if __name__ == '__main__':
         [1, 2, 4, 7, 6]
     ''')
     print(graph.dfs(1, 6))
-    # print(graph.dfs_recursive(1, 6))
+    print(graph.dfs_recursive(1, 6))
