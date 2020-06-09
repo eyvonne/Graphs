@@ -37,6 +37,44 @@ def sum_mins(arr):
     return sum(mins)
 
 
+def sum_mins_recursive(arr):
+    a = []
+    min = None
+    for x in arr:
+        print(x)
+        if type(x) == type([1]):
+            sub = x.copy()
+        else:
+            if min is None or min > x:
+                min = x
+
+
+def sum_mins_2(arr):
+    mins = []
+
+    def helper(arr):
+        min = None
+        for x in arr:
+            if type(x) == type([1, 2, 3]):
+                helper(x)
+            else:
+                if min is None or min > x:
+                    min = x
+        if min is not None:
+            mins.append(min)
+    helper(arr)
+    return sum(mins)
+
+
 if __name__ == '__main__':
     arr = [[8, 4], [90, -1, 3], [9, 62], [-7, -1, -56, -6], [201], [76, 18]]
-    print(sum_mins(arr))
+    # print(sum_mins(arr))
+    arr2 = [
+        [8, [4]],
+        [[90, 91], -1, 3],
+        [9, 62],
+        [[-7, -1, [-56, [-6]]]],
+        [201],
+        [[76, 0], 18],
+    ]
+    print(sum_mins_2(arr2))
