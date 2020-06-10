@@ -6,6 +6,10 @@ from util import Queue
 class User:
     def __init__(self, name):
         self.name = name
+        self.friends = set()
+
+    def add_friend(self, friend):
+        self.friends.add(friend)
 
 
 class SocialGraph:
@@ -24,7 +28,9 @@ class SocialGraph:
             print("WARNING: Friendship already exists")
         else:
             self.friendships[user_id].add(friend_id)
+            self.users[user_id].add_friend(self.users[friend_id])
             self.friendships[friend_id].add(user_id)
+            self.users[friend_id].add_friend(self.users[user_id])
 
     def add_user(self, name):
         """
@@ -55,10 +61,15 @@ class SocialGraph:
             self.add_user(i)
         # Create friendships
         friends = np.random.normal(loc=avg_friendships, size=num_users)
-        for i in range(1, self.last_id+1):
+        for i in range(1, self.last_id):
             for j in range(int(friends[i-1])):
-                friend = randint(i+1, self.last_id) if i < self.last_id else randint(0, i-1)
+                friend = randint(i+1, self.last_id)
                 self.add_friendship(i, friend)
+
+    def check_average_friends(self):
+        friends = self.friendships.values()
+        lengths = [len(i) for i in friends]
+        return (float(sum(lengths)) / len(lengths))
 
     def get_all_social_paths(self, user_id):
         """
@@ -88,5 +99,6 @@ if __name__ == '__main__':
     sg = SocialGraph()
     sg.populate_graph(10, 2)
     print(sg.friendships)
+    print(sg.check_average_friends())
     connections = sg.get_all_social_paths(1)
     print(connections)
