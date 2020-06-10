@@ -40,7 +40,7 @@ class SocialGraph:
         self.users[self.last_id] = User(name)
         self.friendships[self.last_id] = set()
 
-    def populate_graph(self, num_users, avg_friendships):
+    def first_pass_populate_graph(self, num_users, avg_friendships):
         """
         Takes a number of users and an average number of friendships
         as arguments
@@ -65,6 +65,40 @@ class SocialGraph:
             for j in range(int(friends[i-1])):
                 friend = randint(i+1, self.last_id)
                 self.add_friendship(i, friend)
+
+    def populate_graph(self, users, friends):
+        # Reset graph
+        self.last_id = 0
+        self.users = {}
+        self.friendships = {}
+        # !!!! IMPLEMENT ME
+
+        # Add users
+        for i in range(1, users+1):
+            self.add_user(f'User {i}')
+
+        possible_friends = [[False for _ in range(self.last_id)] for _ in range(self.last_id)]
+        for i in range(users * friends // 2):
+            a, b = (randint(1, self.last_id), randint(1, self.last_id))
+            while possible_friends[a-1][b-1] or a == b:
+                a, b = (randint(1, self.last_id), randint(1, self.last_id))
+            possible_friends[a-1][b-1] = True
+            possible_friends[b-1][a-1] = True
+            self.add_friendship(a, b)
+
+    def connected_network_percent(self, user):
+        ''' user is an id, this returns what percent of the network
+        is connected to that user by any degree of seperation'''
+        network = self.get_all_social_paths(user)
+        return len(network)/len(self.users) * 100
+
+    def average_degrees_seperation(self, user):
+        ''' user is a user_id
+        this returns the average degrees of seperation from a user to the
+        rest of the social network'''
+        network = self.get_all_social_paths(user).values()
+        seperation = [len(i) for i in network]
+        return (float(sum(seperation)) / len(seperation))
 
     def check_average_friends(self):
         friends = self.friendships.values()
@@ -97,8 +131,9 @@ class SocialGraph:
 
 if __name__ == '__main__':
     sg = SocialGraph()
-    sg.populate_graph(10, 2)
-    print(sg.friendships)
-    print(sg.check_average_friends())
-    connections = sg.get_all_social_paths(1)
-    print(connections)
+    sg.populate_graph(1000, 200)
+    # sg.populate_graph(10, 2)
+    print(sg.connected_network_percent(1))
+    print(sg.average_degrees_seperation(1))
+    # connections = sg.get_all_social_paths(1)
+    # print(connections)
