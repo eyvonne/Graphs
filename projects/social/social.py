@@ -90,7 +90,7 @@ class SocialGraph:
         ''' user is an id, this returns what percent of the network
         is connected to that user by any degree of seperation'''
         network = self.get_all_social_paths(user)
-        return len(network)/len(self.users) * 100
+        return (len(network) - 1)/len(self.users) * 100
 
     def average_degrees_seperation(self, user):
         ''' user is a user_id
@@ -131,7 +131,7 @@ class SocialGraph:
 
 if __name__ == '__main__':
     sg = SocialGraph()
-    sg.populate_graph(1000, 200)
+    sg.populate_graph(1000, 5)
     # sg.populate_graph(10, 2)
     print(sg.connected_network_percent(1))
     print(sg.average_degrees_seperation(1))
