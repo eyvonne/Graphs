@@ -1,0 +1,15 @@
+unvisited is a set of all rooms
+while unvisited not empty:
+	get start
+	go until all exits visited using dfs
+		pop out of unvisited as we go
+	do a bfs to find the nearest unvisited exit
+	traverse to there 
+	start over
+
+
+if I were to shoot for stretch: 
+from each point with multiple exits, do a dft to find the exits the long way
+go down the longest path
+if stuck, reverse.
+
